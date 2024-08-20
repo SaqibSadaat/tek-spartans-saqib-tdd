@@ -1,10 +1,11 @@
 package playground;
 
-
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 public class UsingTestData {
+
     @Test
     public void testAdding(int firstNumber, int secondNumber, int expectedResult) {
         int result = firstNumber + secondNumber;
