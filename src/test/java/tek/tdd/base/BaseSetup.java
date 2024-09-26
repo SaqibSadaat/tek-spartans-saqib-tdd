@@ -1,5 +1,6 @@
 package tek.tdd.base;
 
+import io.restassured.RestAssured;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -38,6 +39,11 @@ public abstract class BaseSetup {
             InputStream inputStream = new FileInputStream(configFilePath);
             properties = new Properties();
             properties.load(inputStream);
+
+            //Get API Base URL and setup RestAssured
+            String baseURL = properties.getProperty("api.url");
+            RestAssured.baseURI = baseURL;
+
         } catch (IOException ioException) {
             LOGGER.error("Config file error with message {}", ioException.getMessage());
             throw new RuntimeException("Config file error with message" + ioException.getMessage());
@@ -47,10 +53,7 @@ public abstract class BaseSetup {
     public void setupBrowser() {
         String url = properties.getProperty("ui.url");
         String browserType = properties.getProperty("ui.browser");
-        boolean isHeadless = Boolean.parseBoolean(properties.getProperty("ui.browser.headless"));//The parseBoolean method in Java is
-        // a static method of the Boolean class that converts a String value into a boolean primitive type. It is commonly
-        // used to interpret strings as boolean values in Java programs.
-
+        boolean isHeadless = Boolean.parseBoolean(properties.getProperty("ui.browser.headless"));
         LOGGER.info("Opening on {} browser", browserType);
         LOGGER.info("Is Headless ON {}", isHeadless);
 
@@ -88,6 +91,10 @@ public abstract class BaseSetup {
 
     public WebDriver getDriver() {
         return driver;
+    }
+
+    public String getProperty(String key) {
+        return properties.getProperty(key);
     }
 
 
